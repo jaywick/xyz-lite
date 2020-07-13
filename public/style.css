@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/night-owl.min.css');
+
+:root {
+    --theme-primary: #fff;
+    --theme-secondary: #fff;
+    --theme-accent: #9783e3;
+    --theme-background: #111216;
+    --theme-hover: rgba(255, 255, 255, 0.07);
+    --theme-track: rgba(255, 255, 255, 0.3);
+    --theme-progress: #fff;
+    --theme-card: #1d2128;
+    --theme-error: #ee565b;
+    --theme-success: #46b17b;
+    --theme-errorBackground: rgba(238, 86, 91, 0.1);
+    --theme-horizontalRule: rgba(255, 255, 255, 0.15);
+    --theme-inputBackground: rgba(255, 255, 255, 0.07);
+}
+
+body {
+    line-height: 1.756;
+    font-size: 18px;
+    color: var(--theme-primary);
+    font-family: 'SF Pro Display', '-apple-system', 'BlinkMacSystemFont',
+        'San Francisco', 'Helvetica Neue', 'Helvetica', 'Ubuntu', 'Roboto',
+        'Noto', 'Segoe UI', 'Arial', sans-serif;
+    margin: 0 auto 35px;
+    width: 100%;
+    max-width: 680px;
+    background-color: var(--theme-background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Roboto Slab';
+}
+
+article {
+    line-height: 1.756;
+    font-size: 18px;
+}
+
+a {
+    color: var(--theme-accent);
+}
+
+a:not(:hover) {
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 52px;
+    line-height: 1.15;
+    color: var(--theme-ui-colors-primary, #fff);
+    font-family: 'Roboto Slab', Georgia, Serif;
+    font-size: 48px;
+    margin-bottom: 25px;
+    font-weight: bold;
+    line-height: 1.32;
+}
+
+blockquote {
+    color: var(--theme-primary);
+    font-family: 'Roboto Slab', Georgia, Serif;
+    font-style: italic;
+    font-size: 36px;
+    line-height: 1.32;
+}
+
+cite {
+    display: block;
+    text-align: right;
+    font-size: 1.5rem;
+    color: #73737d;
+    font-style: italic;
+    font-family: 'Roboto Slab', Georgia, Serif;
+}
+
+kbd {
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+        0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+    color: #333;
+    display: inline-block;
+    font-size: 0.85em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+}
+
+kbd:not(:last-of-type) {
+    margin-right: 5px;
+}
+
+img {
+    max-width: 680px;
+}
+
+hr {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    height: 14.36px;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='15' viewBox='0 0 10 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.567383' y='14.1777' width='16' height='1' transform='rotate(-60 0.567383 14.1777)' fill='%232D2E33'/%3E%3C/svg%3E");
+    box-sizing: border-box;
+    margin: 50px auto;
+    border-width: 0px;
+    border-style: initial;
+    border-color: initial;
+    border-image: initial;
+    background-repeat: repeat-x;
+    background-position: center center;
+}
+
+.byline {
+    display: inline;
+    color: gray;
+    box-sizing: border-box;
+    color: rgb(115, 115, 125);
+    cursor: default;
+    display: block;
+    font-family: -apple-system, system-ui, 'San Francisco', 'Helvetica Neue',
+        Helvetica, Ubuntu, Roboto, Noto, 'Segoe UI', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25.2px;
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialised;
+}
+
+.byline address {
+    display: inline;
+    font-style: normal;
+    font-weight: bold;
+}
+
+pre > code {
+    font-size: 14px;
+}
+
+p > code {
+    color: rgb(199, 146, 234);
+    font-style: italic;
+    white-space: pre;
+    padding: 0 2px;
+    border-radius: 2px;
+    background-color: rgb(1, 22, 39);
+}
+
+mark {
+    background: #ffe31e;
+    padding: 3px;
+}
