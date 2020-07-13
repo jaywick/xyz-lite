@@ -5,7 +5,8 @@
     "author": "Jay Wick <dev@jaywick.xyz>",
     "license": "MIT",
     "scripts": {
-        "start": "ts-node-dev --ignore-watch node_modules --watch \"doc/**,examples/**,public/**,src/**\" scripts/dev"
+        "build": "ts-node scripts/generate",
+        "start": "ts-node-dev --ignore-watch node_modules --watch \"doc/**,examples/**,public/**,src/**\" scripts/generate"
     },
     "dependencies": {
         "express": "^4.17.1",

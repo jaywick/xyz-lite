@@ -3,7 +3,6 @@ import paths from 'path'
 import { getFilesRecursive, changeExtension } from './util/files'
 import { render } from './util/render'
 import express from 'express'
-import serveStatic from 'serve-static'
 
 const config = {
     docsFolderName: 'examples',
@@ -65,9 +64,14 @@ async function copyPublicFiles(files: AsyncIterable<string>) {
 function serveDist() {
     const app = express()
     app.use(express.static(paths.join(__dirname, '..', 'dist')))
-    app.listen(3000)
 
-    console.log('Started server @ http://127.0.0.1:3000/')
+    if (process.env.NODE_ENV === 'development') {
+        app.listen(3000)
+        console.log('Started dev server @ http://127.0.0.1:3000/')
+    } else {
+        app.listen(80)
+        console.log('Started prod server on port 80')
+    }
 }
 
 main()
