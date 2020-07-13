@@ -19,7 +19,9 @@ async function main() {
     await transformDocs(docs)
     await copyPublicFiles(publics)
 
-    serveDist()
+    if (process.env.NODE_ENV === 'development') {
+        serveDist()
+    }
 }
 
 async function transformDocs(files: AsyncIterable<string>) {
@@ -65,13 +67,8 @@ function serveDist() {
     const app = express()
     app.use(express.static(paths.join(__dirname, '..', 'dist')))
 
-    if (process.env.NODE_ENV === 'development') {
-        app.listen(3000)
-        console.log('Started dev server @ http://127.0.0.1:3000/')
-    } else {
-        app.listen(80)
-        console.log('Started prod server on port 80')
-    }
+    app.listen(3000)
+    console.log('Started dev server @ http://127.0.0.1:3000/')
 }
 
 main()
