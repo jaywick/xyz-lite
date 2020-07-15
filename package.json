@@ -6,7 +6,7 @@
     "license": "MIT",
     "scripts": {
         "build": "ts-node scripts/generate",
-        "start": "ts-node-dev --ignore-watch node_modules --watch \"doc/**,examples/**,public/**,src/**\" scripts/generate"
+        "start": "ts-node-dev --respawn --ignore-watch node_modules --watch \"doc/**,examples/**,public/**,src/**\" scripts/generate"
     },
     "dependencies": {
         "express": "^4.17.1",

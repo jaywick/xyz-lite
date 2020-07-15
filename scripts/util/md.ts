@@ -18,6 +18,19 @@ export const transform = (text: string) => {
         strikethrough: true,
         tables: true,
         extensions: [showdownHighlight, showdownMark],
+        literalMidWordUnderscores: true,
+        simplifiedAutoLink: true,
     })
-    return converter.makeHtml(text)
+
+    const textWithFixedLinks = text.replace(
+        /(?:!\[(.*?)\]\((.+?)\))/gim,
+        (substring, altText: string, path: string) => {
+            if (path.startsWith('./')) {
+                return `![${altText}](.${path})`
+            }
+            return substring
+        }
+    )
+
+    return converter.makeHtml(textWithFixedLinks)
 }

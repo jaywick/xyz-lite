@@ -1,0 +1,66 @@
+---
+title: 'Start Playing Unity Project from Visual Studio [TIP]'
+author: Jay Wick
+excerpt: ""
+slug: start-playing-unity-project-from-visual-studio-tip
+date: 2014-04-19
+tag: pro-tip
+hero: feature.png
+---
+
+If you're like me and use both Visual Studio and Unity, how many times have you accidentally tried to run the game from Visual Studio?
+
+Unless you've bought [UnityVS](https://unityvs.com/), there's a dead simple (and free) way to launch your Unity scene from Visual Studio and get that feeling of warmy goodness from all the seamlessness.
+
+****
+
+**Remember** this isn't a way to debug using Visual Studio, you'll have to use the packaged MonoDevelop or buy the above mentioned UnityVS. This just links your Start (Debug on older versions) button in Visual Studio to run your Unity scene.
+
+# Ingredients
+
+*   Visual Studio (obviously) 
+*   Unity (obviously) 
+*   [AutoHotkey](https://www.autohotkey.com/) 
+
+# Steps
+
+1.  Create a new C# Winforms project called UnitySwitcher (or whatever) 
+2.  Add the Autohotkey to the project 
+3.  Set its *Copy to output Directory* to *Copy if newer* 
+4.  Delete form that was added automatically 
+5. Update `program.cs` to
+
+    ```csharp
+    [STAThread]
+    static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        System.Diagnostics.Process.Start("launch-unity.ahk"); // new
+    }
+    ```
+
+6.  Add this AutoHotkey script to the project as *launch-unity.ahk*
+
+    ```autohotkey
+    IfWinExist, ahk_class UnityContainerWndClass
+    {
+        WinActivate
+        Send ^p ; sends Ctrl+P
+    }
+    else
+    {
+        MsgBox, 64, Unity is not open. Please open the project to run from Visual Studio.
+    }
+    ```
+
+7.  Add your existing project to the solution, it should be called *Assembly-CSharp-vs.csproj*
+8.  Ensure UnitySwitcher is set as your startup project
+
+You can grab the gists of the `launch-unity.ahk` and `program.cs` at [https://gist.github.com/jaywick/11083565](https://gist.github.com/jaywick/11083565)
+
+# Extra Notes
+
+The good thing about this method is that it leaves the *source.sln* solution file untouched. If there's any issues or bugs feel free to hit me back on the gist link or here in the comments.
+
+Happy coding.

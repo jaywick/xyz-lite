@@ -1,0 +1,94 @@
+---
+title: 'Chocolatey Goodness on your PC'
+author: Jay Wick
+excerpt: ""
+slug: chocolatey-goodness-on-your-pc
+date: 2015-06-08
+tag: pro-tip
+hero: chocolatey.png
+---
+
+I started using [Chocolatey](https://chocolatey.org/) the other day and now I can't get enough of it. It's basically `yum` or `apt-get` but for PC. It handles installation, upgrade, uninstallation as well as dependencies between packages! No need to enable multiple updater services and best of all no more 20 clicks to find the latest download! Check out the following commands:
+
+****
+
+Want the latest version of VLC? Just run
+
+    choco install vlc
+
+What to upgrade it?
+
+    choco upgrade vlc
+
+And when it's time to uninstall you'd just enter
+
+    choco uninstall vlc
+
+Time to upgrade everything you install via choco?
+
+    choco upgrade all --confirm
+
+Of course you'll first have to install Chocolatey first by running this in the command prompt.
+
+    @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
+
+### Chromium and Flash
+
+From the featured pic, you'll note I'm using Chromium over Chrome. One annoyance is that you will have to install the new PepperFlash (uses the PPAPI) plugin now that [NPAPI is deprecated](https://www.chromium.org/developers/npapi-deprecation). You can get Flash working on Chromium for Windows through Flash Player 18 Beta which is currently available via [Adobe Labs](https://labs.adobe.com/downloads/flashplayer.html).
+
+### My Apps
+
+I'd love to get my stuff like [Vizr](/portfolio/vizr) and [Kalq](/portfolio/kalq) added as packages soon. But in the mean time here's a list of apps I recommend in the form of a `choco install` batch script.
+
+```bat
+choco feature enable --name=allowGlobalConfirmation
+
+REM basics
+choco install dotnet4.5
+choco install dropbox
+choco install winrar
+choco install microsoftsecurityessentials
+
+REM web
+choco install chromium
+choco install flashplayerplugin
+
+REM media
+choco install vlc
+choco install steam
+choco install blender
+choco install handbrake.install
+choco install markdownpad2
+choco install torrid
+choco install icofx
+choco install screamer
+choco install windowslivewriter
+
+REM dev
+choco install visualstudiocommunity2013
+choco install androidstudio
+choco install sublimetext3
+choco install nodejs
+choco install console2
+choco install sourcetree
+choco install mongodb
+choco install android-sdk
+choco install unity
+choco install innosetup
+choco install robomongo
+choco install autohotkey.portable
+
+REM admin
+choco install sysinternals
+choco install fiddler
+choco install teamviewer
+choco install winscp
+choco install winmerge
+choco install truecrypt
+choco install recuva
+choco install rufus
+```
+
+### Read more
+
+Scott Hanselman has a [great read](https://www.hanselman.com/blog/IsTheWindowsUserReadyForAptget.aspx) about Chocolatey from 2013, but it's still relevant today.

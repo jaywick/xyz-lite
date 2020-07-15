@@ -4,50 +4,65 @@ import matter from 'gray-matter'
 import { Head } from '../../src/head'
 import React from 'react'
 import { Page } from '../../src/page'
+import { Blog } from '../../src/blog'
+import { Home } from '../../src/home'
 
-export const render = (markdown: string) => {
-    const { content, data: frontmatter } = matter(markdown)
-    const html = transform(content)
-
-    const meta: any = {
-        ...frontmatter,
-        author: 'Jay Wick',
-        readableDate: readableDate(frontmatter.date),
-        readTime: readTime(content),
-    }
-
-    return renderToStaticMarkup(
+export const renderPage = (pageHtml: string, meta: any) => {
+    const html = renderToStaticMarkup(
         <html>
             <Head
-                date={readableDate(meta.date)}
+                date={meta.readableDate}
                 description={meta.description}
                 favicon={{}}
                 url=""
                 author={meta.author}
                 hero={meta.hero}
-                readTime={readTime(content)}
+                readTime={meta.readTime}
                 title={meta.title}
             />
-            <Page html={html} meta={meta} />
+            <Page html={pageHtml} meta={meta} />
         </html>
     )
+
+    return `<!DOCTYPE html>\n${html}`
 }
 
-const READ_SPEED = 250 // wpm
-const IMAGE_SPEED = 5 / 60 // 5s per image
+export const renderIndex = (metas: any[]) => {
+    const html = renderToStaticMarkup(
+        <html>
+            <Head
+                author="Jay Wick"
+                date=""
+                description="List of blog posts"
+                favicon={{}}
+                hero=""
+                readTime=""
+                title="Blog posts"
+                url="/blog"
+            />
+            <Blog metas={metas} />
+        </html>
+    )
 
-function readTime(content: string) {
-    const words = content.match(/[\w-]+/g)?.length ?? 0
-    const images = content.match(/\!\[.+?\]\(.+?\)/g)?.length ?? 0
-    const value = Math.ceil(words / READ_SPEED + images * IMAGE_SPEED)
-
-    return `${value} min read`
+    return `<!DOCTYPE html>\n${html}`
 }
 
-function readableDate(value: string) {
-    return new Date(Date.parse(value)).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    })
+export const renderHome = (metas: any[]) => {
+    const html = renderToStaticMarkup(
+        <html>
+            <Head
+                author="Jay Wick"
+                date=""
+                description="List of blog posts"
+                favicon={{}}
+                hero=""
+                readTime=""
+                title="Blog posts"
+                url="/"
+            />
+            <Home metas={metas} />
+        </html>
+    )
+
+    return `<!DOCTYPE html>\n${html}`
 }

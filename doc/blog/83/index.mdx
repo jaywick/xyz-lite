@@ -1,0 +1,33 @@
+---
+title: 'Keep Certain Windows Always on Top of Others'
+author: Jay Wick
+excerpt: ""
+slug: keep-certain-windows-always-on-top-of-others
+date: 2010-09-08
+tag: pro-tip
+hero: image_thumb-5B26-5D.png
+---
+
+How many times have you wanted a window to be on top of the screen while you do something else with another.
+
+You can get that little Pin icon on your windows through the free version of [DisplayFusion](https://www.displayfusion.com/). There are other features such as multi monitor taskbars that even work with Windows 7 and extends the wallpaper shuffling features and keeps the native smooth fade transitions other similar programs lose. Some of these features are not free however.
+
+****
+
+# Setting it up
+
+1. Download DisplayFusion from here [https://www.displayfusion.com/Download/](https://www.displayfusion.com/Download/)
+2. Right click it's system tray icon then click **Settings**
+3. Click the *TitleBar Buttons* side tab on the left
+4. Have *Enable TitleBar Buttons* checked
+5. Click **Add**
+6. In the new window, under *TitleBar Button Action* find _Toggle Window Always on Top_
+7. **Okay** your self out of there, and you're done
+
+You could also achieve this with an [AutoHotkey](https://www.autohotkey.com/) script as simple as:
+
+```autohotkey
+#a::WinSet, AlwaysOnTop, TOGGLE, A   
+```
+
+Which sets your window on top with the press of <kbd>Windows</kbd> + <kbd>A</kbd>

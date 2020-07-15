@@ -1,0 +1,89 @@
+---
+title: 'Starting Again, from the Ground Up—Welcome to xyz'
+author: Jay Wick
+excerpt: ""
+slug: starting-again-from-the-ground-upwelcome-to-xyz
+date: 2018-04-22
+tag: jaywick-xyz
+hero: main.png
+---
+
+So, I did it again. From `.com` on blogger to `.io` on Wordpress, I wasn't happy with how little control I had with my personal website. 129 commits in almost two months of smashing it out on the ferry to work and back, here we are!
+
+Built from ground up using NodeJS, Express, Typescript and MongoDB, and [open sourced on Github](https://github.com/jaywick/blog-xyz), welcome to **jaywick.xyz**!
+
+Now the rest of this post will discuss its design and development decisions, so check out the features on the [dedicated project page](/portfolio/jaywick-xyz) if code isn't really your thing! Or just click around, and enjoy your stay!
+
+****
+
+## Design decisions
+
+### Controller actions from ASP.NET MVC
+
+Routing is managed using method actions and reflection (thanks to `reflect-meta`). In the example below, going to `//jaywick.xyz/portfolio/kalq/edit` with first check if you're an admin (thanks to the `restricted` annotation), get the `:key` which determines which project post to load, and displays the Handlebars `view` to render given the returning data via a presenter.
+
+```typescript
+@restricted()
+@get("/portfolio/:key/edit")
+@view("project")
+async edit(key) {
+    const post = await this.store.projects
+        .filter({ key: key })
+        .single<ProjectModel>();
+    
+    return new ProjectPresenter("update", post, this.isAdmin);
+}
+```
+
+Do note that this required enabling support for experimental decorators in `tsconfig`, similar to what Angular2 requires to support its ways of declaring `@View` and `@Component` for example.
+
+### Fluent API data access from LINQ
+
+The mongo driver straight from NPM was cumbersome to use, it wasn't async friendly let alone favouring method chaining. So I made a simple `StoreQuery` class to manage this, allowing for elegant code as follows.
+
+```typescript
+const posts = await this.store.posts
+    .filter({ status: "publish" })
+    .orderByDesc("date")
+    .skip(offset)
+    .take(4)
+    .toArray<PostModel>();
+```
+
+### async/await
+You may have also noticed I'm using async methods and awaits to wait for resolution of a `Promise`. This mechanism is something some .NET like myself devs have really taken for granted.
+
+We don't ever need to type the following horror.
+
+```ts
+function longOperation(input, onSuccess) {
+    longOperation2(input2, function() {
+        // another callback
+        longOperation3(input3, function() {
+            // this is called callback hell
+            onSuccess();
+        })
+    })
+}
+```
+
+Instead we'd more likley see the following <sup>[1]</sup>.
+
+```ts
+var input2 = await longOperation(input);
+return await longOperation(input2);
+```
+
+So to avoid things like callback-hell and improve code readability, it only made sense to get it working with Node and Typescript.
+
+I desperately wanted to avoid using Babel or Webpack, and to keep things simple with Typescript being the only build system. Now we have a problem here. Typescript only supports async/await if it transpiles to ES6 (officially ES2015) (which browsers don't support yet, we're still on ES5),
+
+Luckily NodeJS supports many ES5 functions in later builds, so there was no further transpilation required. To get this working client side (where browsers need ES5), you'd have to use something like Babel, although [it's on the roadmap](https://github.com/Microsoft/TypeScript/pull/9175) to have asnyc/await transpiling down to both ES5 and even ES3 in the future!
+
+### Avoidances
+Like I said, I wanted to avoid extra build steps and stick to just Typescript. In VSCode, hitting `F5` simply runs `tsc -p .` then starts the Node server via `node entry.js`. The base I use for most electron apps such as [Sprintr](/portfolio/sprintr) used Webpack and the build time, even with `WebpackDevServer` which provides incremental builds, really killed the feedback back loop between coding and testing.
+
+Another avoidance has been JQuery. Not because I consider it bad, but because I wanted to stick to CSS3 animations and `document.window.querySelector` was mostly why I used JQuery in other projects.
+
+### Footnotes
+ 1: Of course there are chainable `then`s and generators, and of course async/await isn't the silverbullet to all forms of asynchronous code, especially now with the growing popularity of Rx and `Observables`.
