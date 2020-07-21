@@ -17,9 +17,13 @@ export const Home = (props: Props) => (
                 <h2>Projects</h2>
                 <ul>
                     {props.metas
-                        .filter((meta) => meta.tag === 'projects')
-                        .map((meta, i) => (
-                            <li key={i}>
+                        .filter((meta) =>
+                            ['kalq', 'newsfeed', 'blackstorm-alpha'].includes(
+                                meta.tag
+                            )
+                        )
+                        .map((meta) => (
+                            <li key={meta.id}>
                                 <a href={meta.url}>{meta.title}</a>
                             </li>
                         ))}
@@ -30,8 +34,8 @@ export const Home = (props: Props) => (
                 <ul>
                     {props.metas
                         .filter((meta) => meta.tag === 'life')
-                        .map((meta, i) => (
-                            <li key={i}>
+                        .map((meta) => (
+                            <li key={meta.id}>
                                 <a href={meta.url}>{meta.title}</a>
                             </li>
                         ))}
@@ -42,8 +46,8 @@ export const Home = (props: Props) => (
                 <ul>
                     {props.metas
                         .filter((meta) => meta.tag === 'gadgets')
-                        .map((meta, i) => (
-                            <li key={i}>
+                        .map((meta) => (
+                            <li key={meta.id}>
                                 <a href={meta.url}>{meta.title}</a>
                             </li>
                         ))}

@@ -36,7 +36,7 @@ export const renderIndex = (metas: any[]) => {
                 title="Blog posts"
                 url="/blog"
             />
-            <Blog metas={metas} />
+            <Blog metas={metas.sort(sortReverseChrono)} />
         </html>
     )
 
@@ -55,9 +55,12 @@ export const renderHome = (metas: any[]) => {
                 title="Blog posts"
                 url="/"
             />
-            <Home metas={metas} />
+            <Home metas={metas.sort(sortReverseChrono)} />
         </html>
     )
 
     return `<!DOCTYPE html>\n${html}`
 }
+
+const sortReverseChrono = (a: IMeta, b: IMeta) =>
+    Date.parse(b.date) - Date.parse(a.date)
