@@ -1,6 +1,4 @@
 import { renderToStaticMarkup } from 'react-dom/server'
-import { transform } from './md'
-import matter from 'gray-matter'
 import { Head } from '../../src/head'
 import React from 'react'
 import { Page } from '../../src/page'
@@ -9,11 +7,10 @@ import { Home } from '../../src/home'
 
 export const renderPage = (pageHtml: string, meta: any) => {
     const html = renderToStaticMarkup(
-        <html>
+        <html lang="en">
             <Head
                 date={meta.readableDate}
                 description={meta.description}
-                favicon={{}}
                 url=""
                 author={meta.author}
                 hero={meta.hero}
@@ -29,12 +26,11 @@ export const renderPage = (pageHtml: string, meta: any) => {
 
 export const renderIndex = (metas: any[]) => {
     const html = renderToStaticMarkup(
-        <html>
+        <html lang="en">
             <Head
                 author="Jay Wick"
                 date=""
                 description="List of blog posts"
-                favicon={{}}
                 hero=""
                 readTime=""
                 title="Blog posts"
@@ -49,12 +45,11 @@ export const renderIndex = (metas: any[]) => {
 
 export const renderHome = (metas: any[]) => {
     const html = renderToStaticMarkup(
-        <html>
+        <html lang="en">
             <Head
                 author="Jay Wick"
                 date=""
                 description="List of blog posts"
-                favicon={{}}
                 hero=""
                 readTime=""
                 title="Blog posts"

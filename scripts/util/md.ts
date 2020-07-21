@@ -10,6 +10,14 @@ const showdownMark = () => [
     },
 ]
 
+const showdownLazyImage = () => [
+    {
+        type: 'output',
+        regex: new RegExp(`<img(.*)>`, 'g'),
+        replace: '<img loading="lazy" $1>',
+    },
+]
+
 export const transform = (text: string) => {
     const converter = new showdown.Converter({
         ...showdown.getDefaultOptions(),
@@ -17,7 +25,7 @@ export const transform = (text: string) => {
         headerLevelStart: 2,
         strikethrough: true,
         tables: true,
-        extensions: [showdownHighlight, showdownMark],
+        extensions: [showdownHighlight, showdownMark, showdownLazyImage],
         literalMidWordUnderscores: true,
         simplifiedAutoLink: true,
     })

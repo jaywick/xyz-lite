@@ -8,7 +8,6 @@ interface Props {
     url: string
     date: string
     readTime: string
-    favicon: { [key: string]: string }
 }
 
 export const Head = (props: Props) => (
@@ -38,38 +37,21 @@ export const Head = (props: Props) => (
         <meta name="article:published_time" content={props.date} />
         <meta name="twitter:label1" content="Reading time" />
         <meta name="twitter:data1" content={props.readTime} />
-        <link rel="shortcut icon" href={props.favicon['48']} />
-        <link rel="manifest" href="/manifest.webmanifest" />
-        <link rel="stylesheet" href="/manifest.webmanifest" />
+        <link rel="shortcut icon" href="/favicon-16.png" />
         <link rel="stylesheet" type="text/css" href="/style.css" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="//fonts.googleapis.com/css2?family=Roboto+Slab&display=swap"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/night-owl.min.css"
+        />
         <meta name="theme-color" content="#111216" />
-        <link rel="apple-touch-icon" sizes="48x48" href={props.favicon['48']} />
-        <link rel="apple-touch-icon" sizes="72x72" href={props.favicon['72']} />
-        <link rel="apple-touch-icon" sizes="96x96" href={props.favicon['96']} />
-        <link
-            rel="apple-touch-icon"
-            sizes="144x144"
-            href={props.favicon['144']}
-        />
-        <link
-            rel="apple-touch-icon"
-            sizes="192x192"
-            href={props.favicon['192']}
-        />
-        <link
-            rel="apple-touch-icon"
-            sizes="256x256"
-            href={props.favicon['256']}
-        />
-        <link
-            rel="apple-touch-icon"
-            sizes="384x384"
-            href={props.favicon['384']}
-        />
-        <link
-            rel="apple-touch-icon"
-            sizes="512x512"
-            href={props.favicon['512']}
-        />
+        <link rel="apple-touch-icon" sizes="64x64" href="/favicon-16.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/favicon-16.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/favicon-512.png" />
     </head>
 )

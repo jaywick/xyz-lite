@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 import paths from 'path'
-import { getFilesRecursive, changeExtension } from './util/files'
+import { getFilesRecursive } from './util/files'
 import { renderIndex, renderPage, renderHome } from './util/render'
 import express from 'express'
 import matter from 'gray-matter'
