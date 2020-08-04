@@ -12,6 +12,7 @@
         "express": "^4.17.1",
         "gray-matter": "^4.0.2",
         "http-server": "^0.12.3",
+        "jimp": "^0.14.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "serve-static": "^1.14.1",

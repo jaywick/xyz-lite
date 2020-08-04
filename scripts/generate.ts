@@ -5,6 +5,7 @@ import { renderIndex, renderPage, renderHome } from './util/render'
 import express from 'express'
 import matter from 'gray-matter'
 import { transform } from './util/md'
+import { createResizedImages } from './util/images'
 
 const config = {
     // docsFolderName: 'examples',
@@ -79,9 +80,17 @@ async function transformDocs(files: AsyncIterable<string>, index: IMeta[]) {
             })
 
             index.push(meta)
-        } else {
+        } else if (
+            ['.png', '.jpg', '.jpeg', '.gif'].some((ext) =>
+                newPath.toLocaleLowerCase().endsWith(ext.toLocaleLowerCase())
+            )
+        ) {
             // copy file verbatim
-            await fs.copyFile(path, newPath)
+            await createResizedImages(path, newPath)
+        } else {
+            console.warn(
+                `Unexpected extension in ${path}. This will be ignored`
+            )
         }
     }
 }
