@@ -38,7 +38,19 @@ export const Head = (props: Props) => (
         <meta name="twitter:label1" content="Reading time" />
         <meta name="twitter:data1" content={props.readTime} />
         <link rel="shortcut icon" href="/favicon-16.png" />
-        <link rel="stylesheet" type="text/css" href="/style.css" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="/theme-dark.css"
+            media="screen and (prefers-color-scheme: dark)"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="/theme-light.css"
+            media="screen and (prefers-color-scheme: light)"
+        />
+        <link rel="stylesheet" type="text/css" href="/styles.css" />
         <link
             rel="stylesheet"
             type="text/css"
@@ -47,7 +59,14 @@ export const Head = (props: Props) => (
         <link
             rel="stylesheet"
             type="text/css"
+            media="screen and (prefers-color-scheme: dark)"
             href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/night-owl.min.css"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            media="screen and (prefers-color-scheme: light)"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github-gist.min.css"
         />
         <meta name="theme-color" content="#111216" />
         <link rel="apple-touch-icon" sizes="64x64" href="/favicon-16.png" />

@@ -1,0 +1,17 @@
+:root {
+    --theme-primary: #555;
+    --theme-secondary: #747474;
+    --theme-accent: #5739ca;
+    --theme-background: #fff;
+    --theme-surface: rgb(241, 241, 241);
+    --theme-surface-border: rgb(221, 221, 221);
+    --theme-hover: rgba(255, 255, 255, 0.07);
+    --theme-track: rgba(255, 255, 255, 0.3);
+    --theme-progress: #fff;
+    --theme-card: #1d2128;
+    --theme-error: #ee565b;
+    --theme-success: #46b17b;
+    --theme-errorBackground: rgba(238, 86, 91, 0.1);
+    --theme-horizontalRule: rgba(255, 255, 255, 0.15);
+    --theme-inputBackground: rgba(255, 255, 255, 0.07);
+}

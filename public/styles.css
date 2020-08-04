@@ -1,31 +1,15 @@
-:root {
-    --theme-primary: #fff;
-    --theme-secondary: #fff;
-    --theme-accent: #9783e3;
-    --theme-background: #111216;
-    --theme-hover: rgba(255, 255, 255, 0.07);
-    --theme-track: rgba(255, 255, 255, 0.3);
-    --theme-progress: #fff;
-    --theme-card: #1d2128;
-    --theme-error: #ee565b;
-    --theme-success: #46b17b;
-    --theme-errorBackground: rgba(238, 86, 91, 0.1);
-    --theme-horizontalRule: rgba(255, 255, 255, 0.15);
-    --theme-inputBackground: rgba(255, 255, 255, 0.07);
-}
-
 body {
-    line-height: 1.756;
-    font-size: 18px;
     color: var(--theme-primary);
+    font-size: 18px;
+    line-height: 1.756;
     font-family: 'SF Pro Display', '-apple-system', 'BlinkMacSystemFont',
         'San Francisco', 'Helvetica Neue', 'Helvetica', 'Ubuntu', 'Roboto',
         'Noto', 'Segoe UI', 'Arial', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-color: var(--theme-background);
     margin: 0 auto 35px;
     max-width: 680px;
-    background-color: var(--theme-background);
     padding: 1rem;
-    -webkit-font-smoothing: antialiased;
 }
 
 h1,
@@ -44,41 +28,47 @@ article {
 
 a {
     color: var(--theme-accent);
-}
-
-a {
     text-decoration: none;
 }
-a {
-    display: inline;
-    position: relative;
-    overflow: hidden;
+
+@media screen and (prefers-reduced-motion: reduce) {
+    a:hover {
+        text-decoration: underline;
+    }
 }
-a:after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    right: 0;
-    width: 0;
-    bottom: -6px;
-    background: var(--theme-accent);
-    height: 3px;
-    transition-property: width;
-    transition-duration: 0.3s;
-    transition-timing-function: ease-out;
-}
-a:hover:after,
-a:focus:after,
-a:active:after {
-    left: 0;
-    right: auto;
-    width: 100%;
+
+@media screen and (prefers-reduced-motion: no-preference) {
+    a {
+        display: inline;
+        position: relative;
+        overflow: hidden;
+    }
+    a:after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        right: 0;
+        width: 0;
+        bottom: -6px;
+        background: var(--theme-accent);
+        height: 3px;
+        transition-property: width;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-out;
+    }
+    a:hover:after,
+    a:focus:after,
+    a:active:after {
+        left: 0;
+        right: auto;
+        width: 100%;
+    }
 }
 
 h1 {
     font-size: 2.5rem;
     line-height: 1.15;
-    color: var(--theme-ui-colors-primary, #fff);
+    color: var(--theme-primary);
     font-family: 'Roboto Slab', Georgia, Serif;
     margin-bottom: 25px;
     font-weight: bold;
@@ -96,10 +86,14 @@ blockquote {
 cite {
     display: block;
     text-align: right;
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #73737d;
     font-style: italic;
     font-family: 'Roboto Slab', Georgia, Serif;
+}
+
+cite::before {
+    content: '— ';
 }
 
 kbd {
@@ -163,7 +157,11 @@ hr {
 }
 
 pre > code {
-    font-size: 14px;
+    font-size: 1rem;
+    font-size: 0.9rem;
+    border-radius: 9px;
+    border: 1px solid var(--theme-surface-border);
+    background: var(--theme-surface);
 }
 
 p > code {
