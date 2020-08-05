@@ -8,6 +8,7 @@ import { transform } from './util/md'
 import { createResizedImages } from './util/images'
 import report from 'yurnalist'
 
+let failed = false
 const config = {
     // docsFolderName: 'examples',
     docsFolderName: 'doc',
@@ -40,6 +41,10 @@ async function main() {
 
     spinner.end()
 
+    if (failed) {
+        throw new Error('Generation unsuccessful. Check the logs.')
+    }
+
     if (process.env.NODE_ENV === 'development') {
         report.info('serving dev server')
         serveDist()
@@ -55,14 +60,16 @@ const isImageFile = (path: string) =>
 const endsWithIgnoreCase = (a: string) => (b: string) =>
     a.toLocaleLowerCase().endsWith(b.toLocaleLowerCase())
 
-const mkDirRecursive = (path: string) =>
-    fs.mkdir(paths.join(path, '..'), { recursive: true })
+const mkDirRecursive = (path: string) => fs.mkdir(path, { recursive: true })
 
 const replacePathComponent = (path: string, find: string, replace: string) =>
     path.replace(new RegExp('\\/' + find + '\\/', 'i'), `/${replace}/`)
 
 const errorHandler = (...data: any[]) => (err: Error) => {
-    report.error('Unexpected error!')
+    report.error('Unhandled error occured with data:')
+    report.inspect(data)
+    report.inspect(err)
+    failed = true
 }
 
 async function transformDocs(files: AsyncIterable<string>, index: IMeta[]) {
