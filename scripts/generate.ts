@@ -27,6 +27,10 @@ async function main() {
 
     const spinner = report.activity()
 
+    spinner.tick('Transforming docs...')
+    await transformDocs(docs, index).catch(report.error)
+    report.success('Transformed docs')
+
     spinner.tick('Copying public files...')
     await copyPublicFiles(publics).catch(report.error)
     report.success('Public files copied')
@@ -34,10 +38,6 @@ async function main() {
     spinner.tick('Creating indexes...')
     await createIndexes(index).catch(report.error)
     report.success('Indexes created')
-
-    spinner.tick('Transforming docs...')
-    await transformDocs(docs, index).catch(report.error)
-    report.success('Transformed docs')
 
     spinner.end()
 
