@@ -6,6 +6,7 @@ import express from 'express'
 import matter from 'gray-matter'
 import { transform } from './util/md'
 import { createResizedImages } from './util/images'
+import report from 'yurnalist'
 
 const config = {
     // docsFolderName: 'examples',
@@ -22,89 +23,121 @@ async function main() {
     const publics = getFilesRecursive(PUBLIC_FOLDER)
 
     const index: IMeta[] = []
-    await transformDocs(docs, index)
-    await copyPublicFiles(publics)
-    await createIndexes(index)
+
+    const spinner = report.activity()
+
+    spinner.tick('Copying public files...')
+    await copyPublicFiles(publics).catch(report.error)
+    report.success('Public files copied')
+
+    spinner.tick('Creating indexes...')
+    await createIndexes(index).catch(report.error)
+    report.success('Indexes created')
+
+    spinner.tick('Transforming docs...')
+    await transformDocs(docs, index).catch(report.error)
+    report.success('Transformed docs')
+
+    spinner.end()
 
     if (process.env.NODE_ENV === 'development') {
+        report.info('serving dev server')
         serveDist()
     }
 }
 
+const isMarkdownFile = (path: string) =>
+    ['.md', '.mdx'].some(endsWithIgnoreCase(path))
+
+const isImageFile = (path: string) =>
+    ['.png', '.jpg', '.jpeg', '.gif'].some(endsWithIgnoreCase(path))
+
+const endsWithIgnoreCase = (a: string) => (b: string) =>
+    a.toLocaleLowerCase().endsWith(b.toLocaleLowerCase())
+
+const mkDirRecursive = (path: string) =>
+    fs.mkdir(paths.join(path, '..'), { recursive: true })
+
+const replacePathComponent = (path: string, find: string, replace: string) =>
+    path.replace(new RegExp('\\/' + find + '\\/', 'i'), `/${replace}/`)
+
+const errorHandler = (...data: any[]) => (err: Error) => {
+    report.error('Unexpected error!')
+}
+
 async function transformDocs(files: AsyncIterable<string>, index: IMeta[]) {
     for await (let path of files) {
-        const newPath = path.replace(
-            new RegExp('\\/' + config.docsFolderName + '\\/', 'i'),
-            `/${config.outputFolderName}/`
+        const newPath = replacePathComponent(
+            path,
+            config.docsFolderName,
+            config.outputFolderName
         )
 
-        // create parent directories
-        await fs.mkdir(paths.join(newPath, '..'), { recursive: true })
+        await mkDirRecursive(paths.join(newPath, '..'))
 
-        if (newPath.endsWith('.md') || newPath.endsWith('.mdx')) {
-            // transform to html
-            const markdown = String(await fs.readFile(path))
-            const { content, data: frontmatter } = matter(markdown)
-            const html = transform(content)
-
-            const articleId = paths.basename(paths.dirname(path))
-            const slug = frontmatter.slug || slugify(frontmatter.title)
-
-            if (!slug) {
-                console.warn('No slug found for ' + newPath)
-            }
-
-            const newFile = paths.join(
-                paths.dirname(newPath),
-                slug,
-                'index.html'
+        if (isMarkdownFile(newPath)) {
+            await transformMarkdown(path, newPath, index).catch(
+                errorHandler(path)
             )
-
-            await fs.mkdir(paths.join(newFile, '..'), { recursive: true })
-
-            const meta: IMeta = {
-                title: frontmatter.title,
-                date: frontmatter.date,
-                slug: frontmatter.slug,
-                hero: '../' + frontmatter.hero,
-                tag: frontmatter.tag,
-                author: 'Jay Wick',
-                readableDate: readableDate(frontmatter.date),
-                readTime: readTime(content),
-                url: `/blog/${articleId}/${frontmatter.slug}`,
-                id: articleId,
-            }
-
-            await fs.writeFile(newFile, renderPage(html, meta), {
-                flag: 'w',
-            })
-
-            index.push(meta)
-        } else if (
-            ['.png', '.jpg', '.jpeg', '.gif'].some((ext) =>
-                newPath.toLocaleLowerCase().endsWith(ext.toLocaleLowerCase())
+        } else if (isImageFile(newPath)) {
+            await createResizedImages(path, newPath, true).catch(
+                errorHandler(path)
             )
-        ) {
-            // copy file verbatim
-            await createResizedImages(path, newPath)
         } else {
-            console.warn(
-                `Unexpected extension in ${path}. This will be ignored`
-            )
+            report.warn(`Unexpected file extension will be ignored: ${path}`)
         }
     }
 }
 
+async function transformMarkdown(
+    path: string,
+    newPath: string,
+    index: IMeta[]
+) {
+    const markdown = String(await fs.readFile(path))
+    const { content, data: frontmatter } = matter(markdown)
+
+    const html = transform(content)
+
+    const articleId = paths.basename(paths.dirname(path))
+    const slug = frontmatter.slug || slugify(frontmatter.title)
+
+    if (!slug) {
+        report.warn(`No slug found for ${newPath}`)
+    }
+
+    const newFile = paths.join(paths.dirname(newPath), slug, 'index.html')
+
+    await mkDirRecursive(paths.join(newFile, '..'))
+
+    const meta: IMeta = {
+        title: frontmatter.title,
+        date: frontmatter.date,
+        slug: frontmatter.slug,
+        hero: '../' + frontmatter.hero,
+        tag: frontmatter.tag,
+        author: 'Jay Wick',
+        readableDate: readableDate(frontmatter.date),
+        readTime: readTime(content),
+        url: `/blog/${articleId}/${frontmatter.slug}`,
+        id: articleId,
+    }
+
+    const pageContent = renderPage(html, meta)
+    await writeFile(newFile, pageContent)
+
+    index.push(meta)
+}
+
 async function copyPublicFiles(files: AsyncIterable<string>) {
     for await (let path of files) {
-        const outpath = path.replace(
-            new RegExp('\\/' + config.publicFolderName + '\\/', 'i'),
-            `/${config.outputFolderName}/`
+        const outpath = replacePathComponent(
+            path,
+            config.publicFolderName,
+            config.outputFolderName
         )
 
-        // create parent directories
-        await fs.mkdir(paths.join(outpath, '..'), { recursive: true })
-
+        await mkDirRecursive(paths.join(outpath, '..'))
         await fs.copyFile(path, outpath)
     }
 }
@@ -116,19 +149,18 @@ function serveDist() {
     )
 
     app.listen(3000)
-    console.log('Started dev server @ http://127.0.0.1:3000/')
+    report.success('Started dev server @ http://127.0.0.1:3000/')
 }
+
+const writeFile = (path: string, content: string) =>
+    fs.writeFile(path, content, { flag: 'w' })
 
 async function createIndexes(metas: IMeta[]) {
     const blogsPath = paths.join(config.outputFolderName, 'blog', 'index.html')
-    await fs.writeFile(blogsPath, renderIndex(metas), {
-        flag: 'w',
-    })
+    await writeFile(blogsPath, renderIndex(metas))
 
     const homePath = paths.join(config.outputFolderName, 'index.html')
-    await fs.writeFile(homePath, renderHome(metas), {
-        flag: 'w',
-    })
+    await writeFile(homePath, renderHome(metas))
 }
 
 const READ_SPEED = 250 // wpm

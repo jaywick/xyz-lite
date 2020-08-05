@@ -6,12 +6,12 @@ import {
     basename as removeFileExtension,
 } from 'path'
 import { existsSync as fileExists } from 'fs'
-const extensions = ['.png', '.jpg']
+import report from 'yurnalist'
 
 export const createResizedImages = async (
     file: string,
     outfile: string,
-    overwrite = false
+    overwrite: boolean
 ) => {
     const outputfolder = directoryPath(outfile)
 
@@ -27,7 +27,7 @@ async function resize(
     outputfolder: string,
     [width, height]: [number, number],
     suffix = '',
-    overwrite = false
+    overwrite: boolean
 ) {
     const extension = fileExtension(filepath)
     const nameNoExt = removeFileExtension(filepath, extension)
@@ -38,8 +38,12 @@ async function resize(
         return newPath
     }
 
-    const image = await Jimp.read(filepath)
-    await image.scaleToFit(width, height).quality(100).writeAsync(newPath)
+    try {
+        const image = await Jimp.read(filepath)
+        await image.scaleToFit(width, height).quality(100).writeAsync(newPath)
+    } catch (err) {
+        report.error(`Failed to resize ${filepath}`)
+    }
 
     return newPath
 }
