@@ -5,12 +5,13 @@ import { Page } from '../../src/page'
 import { Blog } from '../../src/blog'
 import { Home } from '../../src/home'
 
-export const renderPage = (pageHtml: string, meta: any) => {
+export const renderPage = (pageHtml: string, meta: IDoc) => {
     const html = renderToStaticMarkup(
         <html lang="en">
             <Head
                 date={meta.readableDate}
-                description={meta.description}
+                // description={meta.description}
+                description=""
                 url=""
                 author={meta.author}
                 hero={meta.hero}
@@ -24,7 +25,7 @@ export const renderPage = (pageHtml: string, meta: any) => {
     return `<!DOCTYPE html>\n${html}`
 }
 
-export const renderIndex = (metas: any[]) => {
+export const renderIndex = (metas: IDoc[]) => {
     const html = renderToStaticMarkup(
         <html lang="en">
             <Head
@@ -43,7 +44,7 @@ export const renderIndex = (metas: any[]) => {
     return `<!DOCTYPE html>\n${html}`
 }
 
-export const renderHome = (metas: any[]) => {
+export const renderHome = (metas: IDoc[]) => {
     const html = renderToStaticMarkup(
         <html lang="en">
             <Head
@@ -62,5 +63,5 @@ export const renderHome = (metas: any[]) => {
     return `<!DOCTYPE html>\n${html}`
 }
 
-const sortReverseChrono = (a: IMeta, b: IMeta) =>
+const sortReverseChrono = (a: IDoc, b: IDoc) =>
     Date.parse(b.date) - Date.parse(a.date)

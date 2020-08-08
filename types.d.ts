@@ -1,4 +1,5 @@
-class IMeta {
+class IDoc {
+    content: string
     title: string
     date: string
     tag: string

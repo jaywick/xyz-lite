@@ -1,49 +1,44 @@
 import Jimp from 'jimp'
-import {
-    dirname as directoryPath,
-    join as joinPath,
-    extname as fileExtension,
-    basename as removeFileExtension,
-} from 'path'
-import { existsSync as fileExists } from 'fs'
-import report from 'yurnalist'
+import paths from 'path'
 
-export const createResizedImages = async (
-    file: string,
-    outfile: string,
-    overwrite: boolean
-) => {
-    const outputfolder = directoryPath(outfile)
+export const resizeImages = async (images: string[]): Promise<void> => {
+    let count = 0
 
-    const [originalPath, thumbnailPath, microPath] = await Promise.all([
-        resize(file, outputfolder, [1440, 1440], '', overwrite),
-        resize(file, outputfolder, [1000, 320], '-thumb', overwrite),
-        resize(file, outputfolder, [10, 10], '-micro', overwrite),
-    ])
+    for await (const path of images) {
+        const outputfolder = paths.dirname(path.replace(/\/doc\//i, '/dist/'))
+
+        const results = await Promise.allSettled([
+            resize(path, outputfolder, [1440, 1440]),
+            resize(path, outputfolder, [1440, 800]),
+            resize(path, outputfolder, [800, 320], '-thumb'),
+            resize(path, outputfolder, [5, 5], '-micro'),
+        ])
+
+        count += results.filter((x) => x.status === 'fulfilled').length
+    }
+
+    console.info(`Created ${count} resized images from ${images.length}`)
 }
 
 async function resize(
     filepath: string,
     outputfolder: string,
     [width, height]: [number, number],
-    suffix = '',
-    overwrite: boolean
-) {
-    const extension = fileExtension(filepath)
-    const nameNoExt = removeFileExtension(filepath, extension)
+    suffix = ''
+): Promise<void> {
+    const extension = paths.extname(filepath)
+    const nameNoExt = paths.basename(filepath, extension)
 
-    const newPath = joinPath(outputfolder, `${nameNoExt}${suffix}${extension}`)
-
-    if (fileExists(newPath) && !overwrite) {
-        return newPath
-    }
+    const newPath = paths.join(
+        outputfolder,
+        `${nameNoExt}${suffix}${extension}`
+    )
 
     try {
         const image = await Jimp.read(filepath)
         await image.scaleToFit(width, height).quality(100).writeAsync(newPath)
     } catch (err) {
-        report.error(`Failed to resize ${filepath}`)
+        console.error(`Failed to resize ${filepath}`)
+        throw err
     }
-
-    return newPath
 }

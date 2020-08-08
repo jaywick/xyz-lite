@@ -2,7 +2,7 @@ import React from 'react'
 import { Header } from './header'
 
 interface Props {
-    metas: IMeta[]
+    metas: IDoc[]
 }
 
 export const Home = (props: Props) => (
