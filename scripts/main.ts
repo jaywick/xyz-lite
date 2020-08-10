@@ -4,11 +4,11 @@ import {
     collectAllImages,
     copyPublicFiles,
     collectPublicFiles,
-    // createRedirects,
 } from './util/files'
 import { createHtml, createIndexes } from './util/transform'
 import { resizeImages } from './util/images'
 import { startDevServer } from './util/server'
+import { createRedirects } from './util/redirects'
 ;(async () => {
     const docs = await collectAllDocs()
     await buildFolderStructure(docs)
@@ -18,7 +18,7 @@ import { startDevServer } from './util/server'
             createHtml(docs),
             createIndexes(docs),
             copyPublicFiles(await collectPublicFiles()),
-            // createRedirects(docs),
+            createRedirects(docs),
         ]),
         await resizeImages(await collectAllImages()),
     ])

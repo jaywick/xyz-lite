@@ -47,11 +47,8 @@ export const collectPublicFiles = async (): Promise<string[]> => {
 export const copyPublicFiles = async (files: string[]): Promise<void> => {
     for await (let path of files) {
         const newPath = path.replace(/\/public\//i, '/dist/')
-        console.log(path, newPath)
         await fs.copyFile(path, newPath)
     }
 
     console.info(`Copied ${files.length} public files`)
 }
-
-export const createRedirects = () => {}
