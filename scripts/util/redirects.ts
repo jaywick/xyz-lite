@@ -13,6 +13,11 @@ export const createRedirects = async (metas: IDoc[]) => {
         redirects.push([
             `/blog/${meta.id}/*`,
             `/blog/${meta.id}/${meta.slug}/`,
+            301,
+        ])
+        redirects.push([
+            `/blog/${meta.id}/`,
+            `/blog/${meta.id}/${meta.slug}/`,
             '301!',
         ])
     }
