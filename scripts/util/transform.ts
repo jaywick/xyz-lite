@@ -53,15 +53,5 @@ const transform = (text: string) => {
         simplifiedAutoLink: true,
     })
 
-    const textWithFixedLinks = text.replace(
-        /(?:!\[(.*?)\]\((.+?)\))/gim,
-        (substring, altText: string, path: string) => {
-            if (path.startsWith('./')) {
-                return `![${altText}](.${path})`
-            }
-            return substring
-        }
-    )
-
-    return converter.makeHtml(textWithFixedLinks)
+    return converter.makeHtml(text)
 }

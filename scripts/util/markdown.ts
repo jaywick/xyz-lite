@@ -12,7 +12,7 @@ export const extractMeta = async (docPath: string): Promise<IDoc> => {
         title: frontmatter.title,
         date: frontmatter.date,
         slug: frontmatter.slug || slugify(frontmatter.title),
-        hero: '../' + frontmatter.hero,
+        hero: frontmatter.hero,
         tag: frontmatter.tag,
         author: 'Jay Wick',
         readableDate: readableDate(frontmatter.date),
