@@ -2,18 +2,18 @@ import { promises as fs } from 'fs'
 import paths from 'path'
 
 export const createRedirects = async (metas: IDoc[]) => {
-    const redirects: [string, string, number][] = []
+    const redirects: [string, string, number | string][] = []
 
     for await (let meta of metas) {
         redirects.push([
-            `/blog/${meta.id}/${meta.slug}`,
+            `/blog/${meta.id}/${meta.slug}/`,
             `/blog/${meta.id}/`,
             200,
         ])
         redirects.push([
             `/blog/${meta.id}/*`,
-            `/blog/${meta.id}/${meta.slug}`,
-            301,
+            `/blog/${meta.id}/${meta.slug}/`,
+            '301!',
         ])
     }
 
