@@ -8,7 +8,7 @@ export const createHtml = async (docs: IDoc[]) => {
     for await (const doc of docs) {
         const html = transform(doc.content)
         const newFile = paths.resolve(
-            `${__dirname}../../../dist/blog/${doc.id}/index.html`
+            `${__dirname}../../../dist/blog/${doc.id}/${doc.slug}.html`
         )
         const pageContent = renderPage(html, doc)
         await fs.writeFile(newFile, pageContent, { flag: 'w' })
@@ -53,15 +53,5 @@ const transform = (text: string) => {
         simplifiedAutoLink: true,
     })
 
-    const textWithFixedLinks = text.replace(
-        /(?:!\[(.*?)\]\((.+?)\))/gim,
-        (substring, altText: string, path: string) => {
-            if (path.startsWith('./')) {
-                return `![${altText}](.${path})`
-            }
-            return substring
-        }
-    )
-
-    return converter.makeHtml(textWithFixedLinks)
+    return converter.makeHtml(text)
 }
