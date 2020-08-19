@@ -20,7 +20,7 @@ import { createRedirects } from './util/redirects'
             copyPublicFiles(await collectPublicFiles()),
             createRedirects(docs),
         ]),
-        // await resizeImages(await collectAllImages()),
+        await resizeImages(await collectAllImages()),
     ])
 
     process.env.NODE_ENV === 'development' && startDevServer()

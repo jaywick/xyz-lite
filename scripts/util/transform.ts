@@ -8,7 +8,7 @@ export const createHtml = async (docs: IDoc[]) => {
     for await (const doc of docs) {
         const html = transform(doc.content)
         const newFile = paths.resolve(
-            `${__dirname}../../../dist/blog/${doc.id}/index.html`
+            `${__dirname}../../../dist/blog/${doc.id}/${doc.slug}.html`
         )
         const pageContent = renderPage(html, doc)
         await fs.writeFile(newFile, pageContent, { flag: 'w' })
