@@ -169,6 +169,7 @@ pre > code {
     border-radius: 9px;
     border: 1px solid var(--theme-surface-border);
     background: var(--theme-surface);
+    white-space: pre-wrap;
 }
 
 p > code {
