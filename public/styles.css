@@ -12,6 +12,13 @@ body {
     padding: 1rem;
 }
 
+@media print {
+    body {
+        margin: unset;
+        max-width: unset;
+    }
+}
+
 h1,
 h2,
 h3,
