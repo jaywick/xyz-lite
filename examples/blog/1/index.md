@@ -21,7 +21,9 @@ myGreeter.showGreeting()
 
 class SpecialGreeter extends Greeter {
     constructor() {
-        super('Very special greetings')
+        super(
+            `Isn't that fantastic? Isn't that fantastic? You can just push a little tree out of your brush like that. I sincerely wish for you every possible joy life could bring. That's what painting is all about. It should make you feel good when you paint.`
+        )
     }
 }
 ```
