@@ -9,8 +9,17 @@ import { createHtml, createIndexes } from './util/transform'
 import { resizeImages } from './util/images'
 import { startDevServer } from './util/server'
 import { createRedirects } from './util/redirects'
+
+const IS_DEV = process.env.NODE_ENV === 'development'
+
 ;(async () => {
-    const docs = await collectAllDocs()
+    const folder = IS_DEV ? 'examples' : 'doc'
+
+    if (IS_DEV) {
+        console.warn('Running in dev mode')
+    }
+
+    const docs = await collectAllDocs(folder)
     await buildFolderStructure(docs)
 
     await Promise.allSettled([
@@ -20,8 +29,8 @@ import { createRedirects } from './util/redirects'
             copyPublicFiles(await collectPublicFiles()),
             createRedirects(docs),
         ]),
-        await resizeImages(await collectAllImages()),
+        await resizeImages(folder, await collectAllImages(folder)),
     ])
 
-    process.env.NODE_ENV === 'development' && startDevServer()
+    IS_DEV && startDevServer()
 })()

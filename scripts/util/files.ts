@@ -3,8 +3,10 @@ import { promise as glob } from 'glob-promise'
 import paths from 'path'
 import { extractMeta } from './markdown'
 
-export const collectAllDocs = async (): Promise<IDoc[]> => {
-    const pattern = paths.resolve(`${__dirname}/../../doc/**/*.mdx`)
+export const collectAllDocs = async (folderName: string): Promise<IDoc[]> => {
+    const pattern = paths.resolve(
+        `${__dirname}/../../${folderName}/**/*.@(md|mdx)`
+    )
     const docPaths = await glob(pattern)
 
     const docs = await Promise.all(docPaths.map(extractMeta))
@@ -24,9 +26,11 @@ export const buildFolderStructure = async (metas: IDoc[]) => {
     console.info(`Created ${metas.length} folders`)
 }
 
-export const collectAllImages = async (): Promise<string[]> => {
+export const collectAllImages = async (
+    folderName: string
+): Promise<string[]> => {
     const pattern = paths.resolve(
-        `${__dirname}/../../doc/**/*.@(png|jpgjpeg|gif)`
+        `${__dirname}/../../${folderName}/**/*.@(png|jpg|jpeg|gif)`
     )
 
     const images = await glob(pattern)

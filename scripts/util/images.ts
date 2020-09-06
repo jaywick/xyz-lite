@@ -1,17 +1,23 @@
 import Jimp from 'jimp'
 import paths from 'path'
 
-export const resizeImages = async (images: string[]): Promise<void> => {
+export const resizeImages = async (
+    folder: string,
+    images: string[]
+): Promise<void> => {
     let count = 0
 
     for await (const path of images) {
-        const outputfolder = paths.dirname(path.replace(/\/doc\//i, '/dist/'))
+        const outputfolder = paths.dirname(
+            path.replace(new RegExp(`\/${folder}\/`, 'i'), '/dist/')
+        )
 
         const results = await Promise.allSettled([
-            resize(path, outputfolder, [1440, 1440]),
-            resize(path, outputfolder, [1440, 800]),
-            resize(path, outputfolder, [800, 320], '-thumb'),
-            resize(path, outputfolder, [5, 5], '-micro'),
+            resize(path, outputfolder, [320, 320], '-320w'),
+            resize(path, outputfolder, [480, 480], '-480w'),
+            resize(path, outputfolder, [768, 768], '-768w'),
+            resize(path, outputfolder, [1024, 1024], '-1024w'),
+            resize(path, outputfolder, [1200, 1200]),
         ])
 
         count += results.filter((x) => x.status === 'fulfilled').length
