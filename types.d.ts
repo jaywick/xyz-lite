@@ -1,4 +1,4 @@
-class IDoc {
+export class IDoc {
     content: string
     title: string
     date: string

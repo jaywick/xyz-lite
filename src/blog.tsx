@@ -1,5 +1,6 @@
 import React from 'react'
 import { Header } from './header'
+import { IDoc } from '../types'
 
 interface Props {
     metas: IDoc[]

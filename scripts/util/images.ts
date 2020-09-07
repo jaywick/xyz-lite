@@ -1,16 +1,24 @@
 import Jimp from 'jimp'
 import paths from 'path'
+import { IContext } from './context'
+import { promises as fs } from 'fs'
 
-export const resizeImages = async (
-    folder: string,
-    images: string[]
-): Promise<void> => {
+export const resizeImages = async ({
+    folder,
+    images,
+    skipImages,
+}: IContext): Promise<void> => {
     let count = 0
 
     for await (const path of images) {
         const outputfolder = paths.dirname(
             path.replace(new RegExp(`\/${folder}\/`, 'i'), '/dist/')
         )
+
+        if (skipImages) {
+            fs.copyFile(path, paths.join(outputfolder, paths.basename(path)))
+            continue
+        }
 
         const results = await Promise.allSettled([
             resize(path, outputfolder, [320, 320], '-320w'),

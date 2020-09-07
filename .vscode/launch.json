@@ -5,8 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "command": "yarn build",
+            "command": "yarn build --devServer --folder examples",
             "name": "Launch",
+            "request": "launch",
+            "type": "node-terminal",
+            "env": {
+                "NODE_ENV": "development"
+            }
+        },
+        {
+            "command": "yarn build --skipImages --devServer --folder examples",
+            "name": "Launch (Skip Images)",
             "request": "launch",
             "type": "node-terminal",
             "env": {

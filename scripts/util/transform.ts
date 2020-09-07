@@ -9,9 +9,12 @@ import remarkSlug from 'remark-slug'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
 import { lazyImages } from './transformer-plugins/images'
+import { IContext } from './context'
+// @ts-ignore
+import rehypeHighlight from 'rehype-highlight'
 
-export const createHtml = async (docs: IDoc[]) => {
-    for await (const doc of docs) {
+export const createHtml = async ({ docs: metas }: IContext) => {
+    for await (const doc of metas) {
         const html = await transform(doc.content)
         const newFile = paths.resolve(
             `${__dirname}../../../dist/blog/${doc.id}/${doc.slug}.html`
@@ -20,10 +23,10 @@ export const createHtml = async (docs: IDoc[]) => {
         await fs.writeFile(newFile, pageContent, { flag: 'w' })
     }
 
-    console.info(`Created ${docs.length} html files`)
+    console.info(`Created ${metas.length} html files`)
 }
 
-export const createIndexes = async (metas: IDoc[]) => {
+export const createIndexes = async ({ docs: metas }: IContext) => {
     const blogsPath = paths.resolve(`${__dirname}/../../dist/blog/index.html`)
     await fs.writeFile(blogsPath, renderIndex(metas), { flag: 'w' })
 
@@ -31,42 +34,14 @@ export const createIndexes = async (metas: IDoc[]) => {
     await fs.writeFile(homePath, renderHome(metas), { flag: 'w' })
 }
 
-// const showdownMark = () => [
-//     {
-//         type: 'lang',
-//         regex: /==(.+?)==/g,
-//         replace: '<mark>$1</mark>',
-//     },
-// ]
-
-// const showdownLazyImage = () => [
-//     {
-//         type: 'output',
-//         regex: new RegExp(`<img(.*)>`, 'g'),
-//         replace: '<img loading="lazy" $1>',
-//     },
-// ]
-
 const transform = async (text: string): Promise<string> => {
-    // const converter = new showdown.Converter({
-    //     ...showdown.getDefaultOptions(),
-    //     ghCompatibleHeaderId: true,
-    //     headerLevelStart: 2,
-    //     strikethrough: true,
-    //     tables: true,
-    //     extensions: [showdownHighlight, showdownMark, showdownLazyImage],
-    //     literalMidWordUnderscores: true,
-    //     simplifiedAutoLink: true,
-    // })
-
-    // return converter.makeHtml(text)
-
     const processor = unified()
         .use(remarkParse)
         .use(remarkSlug)
         .use(remarkRehype)
+        .use(rehypeHighlight)
         .use(rehypeStringify)
-        .use(lazyImages as any)
+        .use(lazyImages)
 
     const result = await processor.process(text)
     return String(result)

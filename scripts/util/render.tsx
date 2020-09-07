@@ -4,6 +4,7 @@ import React from 'react'
 import { Page } from '../../src/page'
 import { Blog } from '../../src/blog'
 import { Home } from '../../src/home'
+import { IDoc } from '../../types'
 
 export const renderPage = (pageHtml: string, meta: IDoc) => {
     const html = renderToStaticMarkup(

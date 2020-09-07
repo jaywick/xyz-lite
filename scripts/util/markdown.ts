@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs'
 import paths from 'path'
 import matter from 'gray-matter'
+import { IDoc } from '../../types'
 
 export const extractMeta = async (docPath: string): Promise<IDoc> => {
     const markdown = String(await fs.readFile(docPath))

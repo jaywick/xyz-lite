@@ -9,28 +9,22 @@ import { createHtml, createIndexes } from './util/transform'
 import { resizeImages } from './util/images'
 import { startDevServer } from './util/server'
 import { createRedirects } from './util/redirects'
-
-const IS_DEV = process.env.NODE_ENV === 'development'
-
+import { promptArgs } from './util/context'
 ;(async () => {
-    const folder = IS_DEV ? 'examples' : 'doc'
+    const context = promptArgs()
 
-    if (IS_DEV) {
-        console.warn('Running in dev mode')
-    }
-
-    const docs = await collectAllDocs(folder)
-    await buildFolderStructure(docs)
+    await collectAllDocs(context)
+    await buildFolderStructure(context)
 
     await Promise.allSettled([
         await Promise.allSettled([
-            createHtml(docs),
-            createIndexes(docs),
-            copyPublicFiles(await collectPublicFiles()),
-            createRedirects(docs),
+            createHtml(context),
+            createIndexes(context),
+            collectPublicFiles(context).then(() => copyPublicFiles(context)),
+            createRedirects(context),
         ]),
-        await resizeImages(folder, await collectAllImages(folder)),
+        collectAllImages(context).then(() => resizeImages(context)),
     ])
 
-    IS_DEV && startDevServer()
+    context.devServer && startDevServer()
 })()

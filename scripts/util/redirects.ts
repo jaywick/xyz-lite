@@ -1,7 +1,8 @@
 import { promises as fs } from 'fs'
 import paths from 'path'
+import { IContext } from './context'
 
-export const createRedirects = async (metas: IDoc[]) => {
+export const createRedirects = async ({ docs: metas }: IContext) => {
     const redirects: [string, string, number | string][] = []
 
     for await (let meta of metas) {
